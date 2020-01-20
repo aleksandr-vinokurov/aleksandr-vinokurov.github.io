@@ -10,15 +10,6 @@
 
   <body>
     <form class="form">
-      <!-- Текстовое поле -->
-      <div class="form-text form-item">
-        <label class="form-item-label">Текстовое поле</label>
-        <div class="form-item-field">
-          <input id="T0" type="text" name="text" class="form-text-input form-item-input" placeholder="№" />
-        </div>
-        <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
-      </div>
-
       <!-- Телефон -->
       <div class="form-tel form-item">
         <label class="form-item-label">Телефон</label>
@@ -63,12 +54,28 @@
         </div>
       </div>
 
+      <!-- Текстовое поле -->
+      <div class="form-text form-item">
+        <label class="form-item-label">Текстовое поле</label>
+        <div class="form-item-field">
+          <input
+            id="T0"
+            type="text"
+            name="text"
+            class="form-text-input form-item-input"
+            placeholder="№"
+            pattern="\d{10}"
+          />
+        </div>
+        <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
+      </div>
+
       <!-- Выпадающий список -->
       <!-- <div class="form-list form-item">
       <label class="form-item-label">Выпадающий список</label>
       <div class="form-item-field">
-        <select disabled id="L0" name="list" class="form-list-input form-item-input" >
-          <option value="Тинькофф" selected>Тинькофф</option>
+        <select id="L0" name="list" class="form-list-input form-item-input">
+          <option value="Тинькофф" selected="selected">Тинькофф</option>
           <option value="Сбербанк">Сбербанк</option>
           <option value="ВТБ">ВТБ</option>
           <option value=""></option>
@@ -5080,10 +5087,13 @@
       });
       //# sourceMappingURL=imask.js.map
 
+      /* Main script */
+
       /* Регулярки */
-      const telRegExp = /(\+7)\s?[ ][\(](9)[0-9]{2}[\)][ ]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}/;
+      const telRegExp = /^(\+7)\s?[ ][\(](9)[0-9]{2}[\)][ ]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}$/;
       const textRegExp = /^[A-Za-zА-Яа-я0-9]+$/;
-      const dateRegExp = /[0-9]{2}\.[0-9]{2}\.[0-9]{4}/;
+      // const textRegExp = /^\d{10}$/;
+      const dateRegExp = /^[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/;
 
       /* Маска для телефона */
       const phonesArr = document.querySelectorAll(".form-tel-input");
@@ -5217,6 +5227,63 @@
         }
       }
 
+      /* Оповещение о изменения валидности поля в WebView */
+      let checkValidFields = false; //Изменение состояния валидности
+      const changedBooleanArr = []; //Массив хранения изменения валидности любого поля
+
+      function setFieldValidChanged(changedBooleanArr) {
+        if (checkValidFields !== !changedBooleanArr.includes(false)) {
+          checkValidFields = !changedBooleanArr.includes(false);
+          console.log("Изменение валидности", checkValidFields);
+          // AndroidInterface.onFieldsValidChanged(checkValidFields);
+        }
+      }
+
+      function fieldValidChanged() {
+        allFields.forEach((field, i) => {
+          switch (field.name) {
+            case "tel":
+              if (telRegExp.test(field.value)) {
+                changedBooleanArr[i] = true;
+                setFieldValidChanged(changedBooleanArr);
+              } else {
+                changedBooleanArr[i] = false;
+                setFieldValidChanged(changedBooleanArr);
+              }
+              break;
+            case "text":
+              // const regexp = field.pattern;
+              // const textRegExp = new RegExp('^' + regexp + '$');
+              if (textRegExp.test(field.value)) {
+                changedBooleanArr[i] = true;
+                setFieldValidChanged(changedBooleanArr);
+              } else {
+                changedBooleanArr[i] = false;
+                setFieldValidChanged(changedBooleanArr);
+              }
+              break;
+            case "list":
+              if (field.value !== "") {
+                changedBooleanArr[i] = true;
+                setFieldValidChanged(changedBooleanArr);
+              } else {
+                changedBooleanArr[i] = false;
+                setFieldValidChanged(changedBooleanArr);
+              }
+              break;
+            case "date":
+              if (dateRegExp.test(field.value)) {
+                changedBooleanArr[i] = true;
+                setFieldValidChanged(changedBooleanArr);
+              } else {
+                changedBooleanArr[i] = false;
+                setFieldValidChanged(changedBooleanArr);
+              }
+              break;
+          }
+        });
+      }
+
       /* Валидация */
       const form = document.querySelector(".form");
       const allFields = document.querySelectorAll(".form-item-input");
@@ -5235,51 +5302,37 @@
                 if (telRegExp.test(field.value)) {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                  changedBooleanArr[i] = true;
-                  setFieldValidChanged(changedBooleanArr);
                 } else {
                   itemName.innerHTML = null;
                   field.classList.add("error-input");
                   fieldError[i].classList.add("error-text");
-                  changedBooleanArr[i] = false;
-                  setFieldValidChanged(changedBooleanArr);
                 }
                 break;
               case "text":
+                // const regexp = field.pattern;
+                // const textRegExp = new RegExp('^' + regexp + '$');
                 if (textRegExp.test(field.value)) {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                  changedBooleanArr[i] = true;
-                  setFieldValidChanged(changedBooleanArr);
                 } else {
                   field.classList.add("error-input");
                   fieldError[i].classList.add("error-text");
-                  changedBooleanArr[i] = false;
-                  setFieldValidChanged(changedBooleanArr);
                 }
                 break;
               case "list":
                 if (field.value !== "") {
                   fieldError[i].classList.remove("error-text");
-                  changedBooleanArr[i] = true;
-                  setFieldValidChanged(changedBooleanArr);
                 } else {
                   fieldError[i].classList.add("error-text");
-                  changedBooleanArr[i] = false;
-                  setFieldValidChanged(changedBooleanArr);
                 }
                 break;
               case "date":
                 if (dateRegExp.test(field.value)) {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                  changedBooleanArr[i] = true;
-                  setFieldValidChanged(changedBooleanArr);
                 } else {
                   field.classList.add("error-input");
                   fieldError[i].classList.add("error-text");
-                  changedBooleanArr[i] = false;
-                  setFieldValidChanged(changedBooleanArr);
                 }
                 break;
             }
@@ -5287,49 +5340,16 @@
         });
       }
 
-      /* Проверка валидности при ручном вводе */
+      /* Проверка валидности и отправки валидности в webView при ручном вводе */
       allFields.forEach((field, i) => {
         field.addEventListener("input", () => {
           validationFields(i);
+          fieldValidChanged();
         });
       });
-
-      /* Оповещение о изменения валидности поля в WebView */
-      let checkValidFields = false; //Изменение состояния валидности
-      const changedBooleanArr = []; //Массив хранения изменения валидности любого поля
-
-      allFields.forEach((field, i) => {
-        field.addEventListener("input", function() {
-          if (field.name === "text") {
-            const changedTextValid = field.value.length !== 0 && textRegExp.test(field.value);
-            changedBooleanArr[i] = changedTextValid;
-            setFieldValidChanged(changedBooleanArr);
-          } else if (field.name === "tel") {
-            const changedTextValid = field.value.length !== 0 && telRegExp.test(field.value);
-            changedBooleanArr[i] = changedTextValid;
-            setFieldValidChanged(changedBooleanArr);
-          } else if (field.name === "list") {
-            const changedTextValid = field.value.length !== 0;
-            changedBooleanArr[i] = changedTextValid;
-            setFieldValidChanged(changedBooleanArr);
-          } else if (field.name === "date") {
-            const changedTextValid = field.value.length !== 0 && dateRegExp.test(field.value);
-            changedBooleanArr[i] = changedTextValid;
-            setFieldValidChanged(changedBooleanArr);
-          }
-        });
-      });
-
-      function setFieldValidChanged(changedBooleanArr) {
-        if (checkValidFields !== !changedBooleanArr.includes(false)) {
-          checkValidFields = !changedBooleanArr.includes(false);
-          console.log("Изменение валидности", checkValidFields);
-          AndroidInterface.onFieldsValidChanged(checkValidFields);
-        }
-      }
 
       /* Отправка всех данных в Android при изменении любого поля */
-      const objectsArr = [];
+      const objectsArr = []; //Массив объектов с данными всех полей
 
       // Начальное значение всех полей
       allFields.forEach((field, i) => {
@@ -5353,7 +5373,7 @@
             };
             objectsArr[i] = fieldObj;
             console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+            // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
           } else {
             const fieldObj = {
               code: field.id,
@@ -5362,7 +5382,7 @@
             };
             objectsArr[i] = fieldObj;
             console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+            // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
           }
         });
       });
@@ -5387,18 +5407,19 @@
             objectsArr[i] = fieldObj;
           }
           validationFields(i);
+          fieldValidChanged();
         });
         console.log("отправка всех данных при возврате на экран", JSON.stringify(objectsArr));
-        AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+        // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
       }
 
       /* Принятие телефона из книжки Android */
-      function setValue(dataJSON, MOBILE_PHONE) {
+      function setValue(dataJSON, MOBILE_INDEX) {
         const data = JSON.parse(dataJSON);
         telFieldArr.forEach((field, i) => {
           const itemName = field.previousElementSibling;
           const newPhone = transformPhone(data.phone);
-          if (i === MOBILE_PHONE) {
+          if (i === MOBILE_INDEX) {
             field.value = newPhone;
             itemName.innerHTML = data.name;
             telValueArr[i] = field.value;
@@ -5422,7 +5443,6 @@
             field.value = data[i].value;
           }
         });
-
         allFieldSet();
       }
 
@@ -5445,15 +5465,24 @@
               value: ""
             };
             console.log("отправка телефона в книжку", JSON.stringify(phone), MOBILE_PHONE);
-            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
           } else {
             const phone = {
               code: telIdArr[i],
               value: telValueArr[i].replace(/[\s-()_+]/g, "").slice(1)
             };
             console.log("отправка телефона в книжку", JSON.stringify(phone), MOBILE_PHONE);
-            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
           }
+        });
+      });
+
+      /* Отправка выпадающего списка в Android */
+      const listButtons = document.querySelectorAll(".form-list-input");
+      listButtons.forEach((button, i) => {
+        button.addEventListener("click", function() {
+          console.log("выпадающий список");
+          this.blur(); //отменяет выпадение списка
         });
       });
 
@@ -5461,7 +5490,7 @@
 
       // setValue('{"code":"P1","name":"Алексей Шрамко","value":"9170620091"}', 0);
 
-      // setValues('[{"code": "T0","value": "abc123"},{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"},{"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
+      // setValues('[{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"}, {"code": "T0","value": "1234567890"}, {"code": "L0","value": "Тинькофф"}, {"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
     </script>
   </body>
 </html>
