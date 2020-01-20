@@ -5235,7 +5235,7 @@
         if (checkValidFields !== !changedBooleanArr.includes(false)) {
           checkValidFields = !changedBooleanArr.includes(false);
           console.log("Изменение валидности", checkValidFields);
-          // AndroidInterface.onFieldsValidChanged(checkValidFields);
+          AndroidInterface.onFieldsValidChanged(checkValidFields);
         }
       }
 
@@ -5373,7 +5373,7 @@
             };
             objectsArr[i] = fieldObj;
             console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
           } else {
             const fieldObj = {
               code: field.id,
@@ -5382,7 +5382,7 @@
             };
             objectsArr[i] = fieldObj;
             console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
           }
         });
       });
@@ -5410,7 +5410,7 @@
           fieldValidChanged();
         });
         console.log("отправка всех данных при возврате на экран", JSON.stringify(objectsArr));
-        // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+        AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
       }
 
       /* Принятие телефона из книжки Android */
@@ -5465,14 +5465,14 @@
               value: ""
             };
             console.log("отправка телефона в книжку", JSON.stringify(phone), MOBILE_PHONE);
-            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
           } else {
             const phone = {
               code: telIdArr[i],
               value: telValueArr[i].replace(/[\s-()_+]/g, "").slice(1)
             };
             console.log("отправка телефона в книжку", JSON.stringify(phone), MOBILE_PHONE);
-            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
           }
         });
       });
