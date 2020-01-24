@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    <form class="form">
+    <form class="form" novalidate="novalidate">
       <!-- Телефон -->
       <div class="form-tel form-item">
         <label class="form-item-label">Телефон</label>
@@ -64,7 +64,7 @@
             name="text"
             class="form-text-input form-item-input"
             placeholder="№"
-            pattern="^.{3,5}$"
+            pattern="^\d{10}"
           />
         </div>
         <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
@@ -75,21 +75,7 @@
       <label class="form-item-label">Выпадающий список</label>
       <div class="form-item-field">
         <select id="L0" name="list" class="form-list-input form-item-input">
-          <option value="Тинькофф" selected="selected">Тинькофф</option>
-          <option value="Сбербанк">Сбербанк</option>
-          <option value="ВТБ">ВТБ</option>
-          <option value=""></option>
-        </select>
-        <div class="form-list-chevron"></div>
-      </div>
-      <div class="form-item-error">Подсказка</div>
-    </div>
-
-    <div class="form-list form-item">
-      <label class="form-item-label">Выпадающий список</label>
-      <div class="form-item-field">
-        <select id="L1" name="list" class="form-list-input form-item-input">
-          <option value="Рей">ЕВА-00</option>
+          <option value="Аянами">ЕВА-00</option>
           <option value="Икари">ЕВА-01</option>
           <option value="Аска" selected="selected">ЕВА-02</option>
         </select>
@@ -5278,7 +5264,7 @@
             case "text":
               const regexpText = field.pattern;
               const textRegExp = new RegExp("^" + regexpText + "$");
-              if (textRegExp.test(field.value)) {
+              if (textRegExp.test(field.value) || regexpText === "") {
                 changedBooleanArr[i] = true;
                 setFieldValidChanged(changedBooleanArr);
               } else {
@@ -5320,8 +5306,8 @@
       let telCodeArr = []; //массив id телефонов
       let telValueArr = []; //массив введенных телефонов
       let listCodeArr = []; //массив id списков
-      let listselectedItem = []; //массив выбранного элемента списков
-      let listOptionArr = []; //массив элементов списков
+      let listSelectedItemArr = []; //массив выбранных элементов списков
+      let listOptionsArr = []; //массив элементов списков
 
       function validationFields(fieldNumber) {
         allFields.forEach(function(field, i) {
@@ -5341,7 +5327,7 @@
               case "text":
                 const regexpText = field.pattern;
                 const textRegExp = new RegExp("^" + regexpText + "$");
-                if (textRegExp.test(field.value)) {
+                if (textRegExp.test(field.value) || regexpText === "") {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
                 } else {
@@ -5385,12 +5371,21 @@
 
       // Начальное значение всех полей
       allFields.forEach(function(field, i) {
-        const fieldObj = {
-          code: field.id,
-          value: field.value,
-          name: null
-        };
-        objectsArr[i] = fieldObj;
+        if (field.name === "list") {
+          const fieldObj = {
+            code: field.id,
+            value: field.options[i].text,
+            name: null
+          };
+          objectsArr[i] = fieldObj;
+        } else {
+          const fieldObj = {
+            code: field.id,
+            value: field.value,
+            name: null
+          };
+          objectsArr[i] = fieldObj;
+        }
       });
 
       // При изменении полей
@@ -5404,8 +5399,13 @@
               value: field.value.replace(/[\s-()_+]/g, "").slice(1)
             };
             objectsArr[i] = fieldObj;
-            console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+          } else if (field.name === "list") {
+            const fieldObj = {
+              code: field.id,
+              name: null,
+              value: field.options.text
+            };
+            objectsArr[i] = fieldObj;
           } else {
             const fieldObj = {
               code: field.id,
@@ -5413,9 +5413,9 @@
               value: field.value
             };
             objectsArr[i] = fieldObj;
-            console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
           }
+          console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
+          AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
         });
       });
 
@@ -5481,6 +5481,7 @@
             field.value = data[i].value;
           }
         });
+        console.log(telValueArr);
         allFieldSet();
       }
 
@@ -5518,28 +5519,29 @@
       /* Отправка выпадающего списка в Android */
       const listButtons = document.querySelectorAll(".form-list-input");
 
-      // listFieldArr.forEach(function (field, i) {
-      //   listCodeArr[i] = field.id;
-      //   // listselectedItem = [];
-      //   // listOptionArr = [];
-      // });
+      listFieldArr.forEach(function(field, i) {
+        listCodeArr[i] = field.id;
+        listSelectedItemArr[i] = field.options.selectedIndex;
+        const listOptionObj = {};
+        for (let j = 0; j < field.options.length; j++) {
+          listOptionObj[field.options[j].index] = field.options[j].text;
+        }
+        listOptionsArr[i] = listOptionObj;
+      });
 
-      // listButtons.forEach(function (button, i) {
-      //   button.addEventListener('click', function() {
-      //     const LIST = 1;   //код списка
-      //     this.blur();  //отменяет выпадение списка
-
-      //     // const list = {
-      //     //   code: listCodeArr[i],
-      //     //   selectedItem: 1,
-      //     //   list: {
-
-      //     //   }
-      //     // };
-      //     // console.log('отправка списка в Android', JSON.stringify(list), LIST);
-      //       // AndroidInterface.onClick(JSON.stringify(list), LIST);
-      //   });
-      // });
+      listButtons.forEach(function(button, i) {
+        button.addEventListener("click", function() {
+          this.blur(); //отменяет выпадение списка
+          const LIST = 1; //код списка
+          const list = {
+            code: listCodeArr[i],
+            selectedItem: listSelectedItemArr[i],
+            list: listOptionsArr[i]
+          };
+          console.log("отправка списка в Android", JSON.stringify(list), LIST);
+          AndroidInterface.onClick(JSON.stringify(list), LIST);
+        });
+      });
 
       /* Для тестов */
 
