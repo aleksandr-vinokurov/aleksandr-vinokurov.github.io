@@ -5453,17 +5453,19 @@
             case 0:
               const itemName = field.previousElementSibling;
               const newPhone = transformPhone(data.phone);
-              if (field.id === data.code) {
-                field.value = newPhone;
-                itemName.innerHTML = data.name;
-                telValueArr[i] = field.value;
-              }
+              // if (field.id === data.code) {
+              field.value = newPhone;
+              itemName.innerHTML = data.name;
+              telValueArr[i] = field.value;
+              // }
               break;
             case 1:
               console.log("setValue список");
               break;
           }
         });
+        console.log("Сработал метод setValue");
+        allFieldSet();
       }
 
       /* Принятие и сохранение данных всех полей */
@@ -5481,7 +5483,7 @@
             field.value = data[i].value;
           }
         });
-        console.log(telValueArr);
+        console.log("Сработал метод setValues");
         allFieldSet();
       }
 
