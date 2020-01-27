@@ -71,18 +71,18 @@
       </div>
 
       <!-- Выпадающий список -->
-      <!-- <div class="form-list form-item">
-      <label class="form-item-label">Выпадающий список</label>
-      <div class="form-item-field">
-        <select id="L0" name="list" class="form-list-input form-item-input">
-          <option value="Аянами">ЕВА-00</option>
-          <option value="Икари">ЕВА-01</option>
-          <option value="Аска" selected="selected">ЕВА-02</option>
-        </select>
-        <div class="form-list-chevron"></div>
+      <div class="form-list form-item">
+        <label class="form-item-label form-list-title">Выпадающий список</label>
+        <div class="form-item-field">
+          <select id="L0" name="list" class="form-list-input form-item-input">
+            <option value="Аянами">ЕВА-00</option>
+            <option value="Икари">ЕВА-01</option>
+            <option value="Аска" selected="selected">ЕВА-02</option>
+          </select>
+          <div class="form-list-chevron"></div>
+        </div>
+        <div class="form-item-error">Подсказка</div>
       </div>
-      <div class="form-item-error">Подсказка</div>
-    </div> -->
 
       <!-- Дата -->
       <div class="form-date form-item">
@@ -5308,6 +5308,7 @@
       let listCodeArr = []; //массив id списков
       let listSelectedItemArr = []; //массив выбранных элементов списков
       let listOptionsArr = []; //массив элементов списков
+      let listTitleArr = document.querySelectorAll(".form-list-title"); //массив названия списков
 
       function validationFields(fieldNumber) {
         allFields.forEach(function(field, i) {
@@ -5371,18 +5372,23 @@
 
       // Начальное значение всех полей
       allFields.forEach(function(field, i) {
-        if (field.name === "list") {
+        if (field.name === "tel") {
           const fieldObj = {
             code: field.id,
-            value: field.options[i].text,
+            value: field.value,
             name: null
+          };
+          objectsArr[i] = fieldObj;
+        } else if (field.name === "list") {
+          const fieldObj = {
+            code: field.id,
+            selectedItem: field.options.selectedIndex
           };
           objectsArr[i] = fieldObj;
         } else {
           const fieldObj = {
             code: field.id,
-            value: field.value,
-            name: null
+            value: field.value
           };
           objectsArr[i] = fieldObj;
         }
@@ -5402,14 +5408,12 @@
           } else if (field.name === "list") {
             const fieldObj = {
               code: field.id,
-              name: null,
-              value: field.options.text
+              selectedItem: field.options.selectedIndex
             };
             objectsArr[i] = fieldObj;
           } else {
             const fieldObj = {
               code: field.id,
-              name: null,
               value: field.value
             };
             objectsArr[i] = fieldObj;
@@ -5430,10 +5434,15 @@
               value: field.value.replace(/[\s-()_+]/g, "").slice(1)
             };
             objectsArr[i] = fieldObj;
+          } else if (field.name === "list") {
+            const fieldObj = {
+              code: field.id,
+              selectedItem: field.options.selectedIndex
+            };
+            objectsArr[i] = fieldObj;
           } else {
             const fieldObj = {
               code: field.id,
-              name: null,
               value: field.value
             };
             objectsArr[i] = fieldObj;
@@ -5448,24 +5457,24 @@
       /* Принятие данных по типу из Android */
       function setValue(dataJSON, codeType) {
         const data = JSON.parse(dataJSON);
-        telFieldArr.forEach(function(field, i) {
-          switch (codeType) {
-            case 0:
+        switch (codeType) {
+          case 0:
+            telFieldArr.forEach(function(field, i) {
               const itemName = field.previousElementSibling;
               const newPhone = transformPhone(data.phone);
-              // if (field.id === data.code) {
               field.value = newPhone;
               itemName.innerHTML = data.name;
               telValueArr[i] = field.value;
-              // }
-              break;
-            case 1:
-              console.log("setValue список");
-              break;
-          }
-        });
-        console.log("Сработал метод setValue");
+            });
+            break;
+          case 1:
+            listFieldArr.forEach(function(field, i) {
+              field.options[data.selectedItem].selected = true;
+            });
+            break;
+        }
         allFieldSet();
+        console.log("Сработал метод setValue");
       }
 
       /* Принятие и сохранение данных всех полей */
@@ -5479,12 +5488,14 @@
             field.value = newPhone;
             itemName.innerHTML = data[i].name;
             telValueArr.push(field.value);
+          } else if (field.name === "list") {
+            field.options[data[i].selectedItem].selected = true;
           } else {
             field.value = data[i].value;
           }
         });
-        console.log("Сработал метод setValues");
         allFieldSet();
+        console.log("Сработал метод setValues");
       }
 
       /* Отправка телефона в книжку Android */
@@ -5537,6 +5548,7 @@
           const LIST = 1; //код списка
           const list = {
             code: listCodeArr[i],
+            title: listTitleArr[i].innerHTML,
             selectedItem: listSelectedItemArr[i],
             list: listOptionsArr[i]
           };
@@ -5548,8 +5560,8 @@
       /* Для тестов */
 
       // setValue('{"code":"P0","name":"Алексей Шрамко","phone":"9170620091"}', 0);
-
-      // setValues('[{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"}, {"code": "T0","value": "1234567890"}, {"code": "L0","value": "Тинькофф"}, {"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
+      // setValue('{"code":"L0","selectedItem":"1"}', 1);
+      // setValues('[{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"}, {"code": "T0","value": "1234567890"}, {"code": "L0","selectedItem": "0"}, {"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
     </script>
   </body>
 </html>
