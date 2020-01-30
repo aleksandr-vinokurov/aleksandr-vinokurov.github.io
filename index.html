@@ -5274,38 +5274,25 @@
 
       function validationFields(fieldNumber) {
         allFields.forEach(function(field, i) {
-          const itemName = field.previousElementSibling;
           if (fieldNumber === i) {
             switch (field.name) {
               case "tel":
                 if (telRegExp.test(field.value)) {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                } else {
-                  itemName.innerHTML = null;
-                  field.classList.add("error-input");
-                  fieldError[i].classList.add("error-text");
                 }
                 break;
               case "text":
                 const regexpText = field.pattern;
                 const textRegExp = new RegExp("^" + regexpText + "$");
-                if (field.value === "") {
-                  field.classList.add("error-input");
-                  fieldError[i].classList.add("error-text");
-                } else if (textRegExp.test(field.value) || regexpText === "") {
+                if (textRegExp.test(field.value) || regexpText === "") {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                } else {
-                  field.classList.add("error-input");
-                  fieldError[i].classList.add("error-text");
                 }
                 break;
               case "list":
                 if (field.value !== "") {
                   fieldError[i].classList.remove("error-text");
-                } else {
-                  fieldError[i].classList.add("error-text");
                 }
                 break;
               case "date":
@@ -5314,9 +5301,6 @@
                 if (dateRegExp.test(field.value)) {
                   field.classList.remove("error-input");
                   fieldError[i].classList.remove("error-text");
-                } else {
-                  field.classList.add("error-input");
-                  fieldError[i].classList.add("error-text");
                 }
                 break;
             }
@@ -5329,6 +5313,44 @@
         field.addEventListener("input", function() {
           validationFields(i);
           fieldValidChanged();
+        });
+      });
+
+      /* Проверка валидности при потере фокуса */
+      allFields.forEach(function(field, i) {
+        field.addEventListener("blur", function() {
+          switch (field.name) {
+            case "tel":
+              if (!telRegExp.test(field.value)) {
+                field.classList.add("error-input");
+                fieldError[i].classList.add("error-text");
+              }
+              break;
+            case "text":
+              const regexpText = field.pattern;
+              const textRegExp = new RegExp("^" + regexpText + "$");
+              if (field.value === "") {
+                field.classList.add("error-input");
+                fieldError[i].classList.add("error-text");
+              } else if (!(textRegExp.test(field.value) || regexpText === "")) {
+                field.classList.add("error-input");
+                fieldError[i].classList.add("error-text");
+              }
+              break;
+            case "list":
+              if (field.value === "") {
+                fieldError[i].classList.add("error-text");
+              }
+              break;
+            case "date":
+              const regexpDate = field.pattern;
+              const dateRegExp = new RegExp("^" + regexpDate + "$");
+              if (!dateRegExp.test(field.value)) {
+                field.classList.add("error-input");
+                fieldError[i].classList.add("error-text");
+              }
+              break;
+          }
         });
       });
 
@@ -5534,9 +5556,9 @@
         });
       });
 
+      /* Autoscroll до выбранного элемента */
       const screenHeight = document.documentElement.clientHeight; //высота экрана
 
-      /* Autoscroll до выбранного элемента */
       allFields.forEach(function(field, i) {
         field.addEventListener("click", function() {
           const fieldBox = this.getBoundingClientRect(); //высота элемента
