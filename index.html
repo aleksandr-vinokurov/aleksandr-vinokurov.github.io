@@ -5347,7 +5347,7 @@
         } else if (field.name === "list") {
           const fieldObj = {
             code: field.id,
-            selectedItem: field.options.selectedIndex
+            value: field.options.selectedIndex
           };
           objectsArr[i] = fieldObj;
         } else {
@@ -5373,7 +5373,7 @@
           } else if (field.name === "list") {
             const fieldObj = {
               code: field.id,
-              selectedItem: field.options.selectedIndex
+              value: field.options.selectedIndex
             };
             objectsArr[i] = fieldObj;
           } else {
@@ -5402,7 +5402,7 @@
           } else if (field.name === "list") {
             const fieldObj = {
               code: field.id,
-              selectedItem: field.options.selectedIndex
+              value: field.options.selectedIndex
             };
             objectsArr[i] = fieldObj;
           } else {
@@ -5457,7 +5457,7 @@
             itemName.innerHTML = data[i].name;
             telValueArr.push(field.value);
           } else if (field.name === "list") {
-            field.options[data[i].selectedItem].selected = true;
+            field.options[data[i].value].selected = true;
           } else {
             field.value = data[i].value;
           }
@@ -5551,7 +5551,7 @@
 
       // setValue('{"code":"P0","name":"Алексей Шрамко","phone":"9170620091"}', 0);
       // setValue('{"code":"L0","selectedItem":"1"}', 1);
-      // setValues('[{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"}, {"code": "T0","value": "1234567890"}, {"code": "L0","selectedItem": "0"}, {"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
+      // setValues('[{"code": "P0","name": "Kiss-shot Acerola-orion Heart-under-blade Fair Princess","value": "9307066444"}, {"code": "T0","value": "1234567890"}, {"code": "L0","value": "0"}, {"code": "D0","value": "11.11.2020"},{"code": "C0","value": "Необязательно это все"}]');
     </script>
   </body>
 </html>
