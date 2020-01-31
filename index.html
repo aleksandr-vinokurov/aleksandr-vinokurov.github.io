@@ -55,79 +55,58 @@
       </div>
 
       <!-- Текстовое поле -->
-      <div class="form-text form-item">
-        <label class="form-item-label">Текстовое поле</label>
-        <div class="form-item-field">
-          <input
-            id="T0"
-            type="text"
-            name="text"
-            class="form-text-input form-item-input"
-            placeholder="№"
-            pattern="^\d{10}"
-          />
-        </div>
-        <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
+      <!-- <div class="form-text form-item">
+      <label class="form-item-label">Текстовое поле</label>
+      <div class="form-item-field">
+        <input id="T0" type="text" name="text" class="form-text-input form-item-input" placeholder="№"
+          pattern="^\d{10}">
       </div>
+      <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
+    </div> -->
 
       <!-- Выпадающий список -->
-      <div class="form-list form-item">
-        <label class="form-item-label form-list-title">Выпадающий список</label>
-        <div class="form-item-field">
-          <select id="L0" name="list" class="form-list-input form-item-input">
-            <option value="Аянами">ЕВА-00</option>
-            <option value="Икари">ЕВА-01</option>
-            <option value="Аска" selected="selected">ЕВА-02</option>
-          </select>
-          <div class="form-list-chevron"></div>
-        </div>
-        <div class="form-item-error">Подсказка</div>
+      <!-- <div class="form-list form-item">
+      <label class="form-item-label form-list-title">Выпадающий список</label>
+      <div class="form-item-field">
+        <select id="L0" name="list" class="form-list-input form-item-input">
+          <option value="Аянами">ЕВА-00</option>
+          <option value="Икари">ЕВА-01</option>
+          <option value="Аска" selected="selected">ЕВА-02</option>
+        </select>
+        <div class="form-list-chevron"></div>
       </div>
+      <div class="form-item-error">Подсказка</div>
+    </div> -->
 
       <!-- Дата -->
-      <div class="form-date form-item">
-        <label class="form-item-label">Дата</label>
-        <div class="form-item-field">
-          <input
-            type="text"
-            id="D0"
-            name="date"
-            class="form-date-input form-item-input"
-            placeholder="ДД.ММ.ГГГГ"
-            pattern="[0-9]{2}\.[0-9]{2}\.[0-9]{4}"
-          />
-          <button type="button" class="form-date-calendar">
-            <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M0.5 7.5V17.5C0.5 18.6046 1.39543 19.5 2.5 19.5H15.5C16.6046 19.5 17.5 18.6046 17.5 17.5V7.5M0.5 7.5V3.5C0.5 2.39543 1.39543 1.5 2.5 1.5H15.5C16.6046 1.5 17.5 2.39543 17.5 3.5V7.5M0.5 7.5H17.5M13.5 0.5V3.5M4.5 0.5V3.5"
-                stroke="#979797"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-        <div class="form-item-error">Выберите дату</div>
+      <!-- <div class="form-date form-item">
+      <label class="form-item-label">Дата</label>
+      <div class="form-item-field">
+        <input type="text" id="D0" name="date" class="form-date-input form-item-input" placeholder="ДД.ММ.ГГГГ"
+          pattern="[0-9]{2}\.[0-9]{2}\.[0-9]{4}">
+        <button type="button" class="form-date-calendar">
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.5 7.5V17.5C0.5 18.6046 1.39543 19.5 2.5 19.5H15.5C16.6046 19.5 17.5 18.6046 17.5 17.5V7.5M0.5 7.5V3.5C0.5 2.39543 1.39543 1.5 2.5 1.5H15.5C16.6046 1.5 17.5 2.39543 17.5 3.5V7.5M0.5 7.5H17.5M13.5 0.5V3.5M4.5 0.5V3.5"
+              stroke="#979797" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
+      <div class="form-item-error">Выберите дату</div>
+    </div> -->
 
       <!-- Комментарий -->
-      <div class="form-comment form-item">
-        <label class="form-item-label">Комментарий <span>(необязательно)</span></label>
-        <div class="form-item-field form-item-field-comment">
-          <textarea
-            id="C0"
-            name="comment"
-            class="form-comment-input form-item-input"
-            placeholder="Сообщение получателю"
-          ></textarea>
-        </div>
+      <!-- <div class="form-comment form-item">
+      <label class="form-item-label">Комментарий <span>(необязательно)</span></label>
+      <div class="form-item-field form-item-field-comment">
+        <textarea id="C0" name="comment" class="form-comment-input form-item-input"
+          placeholder="Сообщение получателю"></textarea>
       </div>
+    </div> -->
     </form>
 
     <!-- Скрипты -->
     <script>
-      // 'use strict';
-
       (function(global, factory) {
         typeof exports === "object" && typeof module !== "undefined"
           ? factory(exports)
@@ -5205,7 +5184,7 @@
         if (checkValidFields !== !changedBooleanArr.includes(false)) {
           checkValidFields = !changedBooleanArr.includes(false);
           console.log("Изменение валидности", checkValidFields);
-          AndroidInterface.onFieldsValidChanged(checkValidFields);
+          // AndroidInterface.onFieldsValidChanged(checkValidFields);
         }
       }
 
@@ -5381,7 +5360,7 @@
         }
       });
 
-      // При изменении полей
+      // При изменении любого поля
       allFields.forEach(function(field, i) {
         field.addEventListener("input", function() {
           const itemName = field.previousElementSibling;
@@ -5406,7 +5385,8 @@
             objectsArr[i] = fieldObj;
           }
           console.log("отправка даных при изменении любого поля", JSON.stringify(objectsArr));
-          AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+          // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+          window.webkit.messageHandlers.onFieldsValueChange.postMessage(JSON.stringify(objectsArr));
         });
       });
 
@@ -5438,7 +5418,8 @@
           fieldValidChanged();
         });
         console.log("отправка всех данных при возврате на экран", JSON.stringify(objectsArr));
-        AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+        // AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
+        window.webkit.messageHandlers.onFieldsValueChange.postMessage(JSON.stringify(objectsArr));
       }
 
       /* Принятие данных по типу из Android */
@@ -5507,14 +5488,16 @@
               value: ""
             };
             console.log("отправка телефона в Android", JSON.stringify(phone), MOBILE_PHONE);
-            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            window.webkit.messageHandlers.observer.postMessage(JSON.stringify(phone), MOBILE_PHONE);
           } else {
             const phone = {
               code: telCodeArr[i],
               value: telValueArr[i].replace(/[\s-()_+]/g, "").slice(1)
             };
             console.log("отправка телефона в Android", JSON.stringify(phone), MOBILE_PHONE);
-            AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            // AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
+            window.webkit.messageHandlers.observer.postMessage(JSON.stringify(phone), MOBILE_PHONE);
           }
         });
       });
@@ -5543,7 +5526,7 @@
             list: listOptionsArr[i]
           };
           console.log("отправка списка в Android", JSON.stringify(list), LIST);
-          AndroidInterface.onClick(JSON.stringify(list), LIST);
+          // AndroidInterface.onClick(JSON.stringify(list), LIST);
         });
       });
 
@@ -5552,19 +5535,6 @@
         field.addEventListener("keydown", function(e) {
           if (e.keyCode === 9 || e.keyCode === 13) {
             e.preventDefault();
-          }
-        });
-      });
-
-      /* Autoscroll до выбранного элемента */
-      const screenHeight = document.documentElement.clientHeight; //высота экрана
-
-      allFields.forEach(function(field, i) {
-        field.addEventListener("click", function() {
-          const fieldBox = this.getBoundingClientRect(); //высота элемента
-          const fieldPositionTop = fieldBox.top + pageXOffset; //координата высоты элемента
-          if (fieldPositionTop > screenHeight / 2) {
-            window.scrollBy(0, -(screenHeight / 2 - fieldPositionTop));
           }
         });
       });
