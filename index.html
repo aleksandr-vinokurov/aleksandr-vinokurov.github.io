@@ -5544,7 +5544,9 @@
             const phone = {
               type: String(MOBILE_PHONE),
               code: telCodeArr[i],
-              value: ""
+              value: "",
+              name: "",
+              phone: ""
             };
             if (platform === "Android") {
               console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
@@ -5557,7 +5559,9 @@
             const phone = {
               type: String(MOBILE_PHONE),
               code: telCodeArr[i],
-              value: telValueArr[i].replace(/[\s-()_+]/g, "").slice(1)
+              value: telValueArr[i].replace(/[\s-()_+]/g, "").slice(1),
+              name: "",
+              phone: ""
             };
             if (platform === "Android") {
               console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
