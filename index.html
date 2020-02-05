@@ -5100,7 +5100,10 @@
       /* Main script */
 
       /* Платформа */
-      const platform = document.querySelector("html").getAttribute("platform");
+      const platform = document
+        .querySelector("html")
+        .getAttribute("platform")
+        .toLocaleLowerCase();
 
       /* Регулярки */
       const telRegExp = /^(\+7)\s?[ ][\(](9)[0-9]{2}[\)][ ]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}$/;
@@ -5210,10 +5213,10 @@
       function setFieldValidChanged(changedBooleanArr) {
         if (checkValidFields !== !changedBooleanArr.includes(false)) {
           checkValidFields = !changedBooleanArr.includes(false);
-          if (platform === "Android") {
+          if (platform === "android") {
             console.log("Изменение валидности в Android, метод onFieldsValidChanged", checkValidFields);
             AndroidInterface.onFieldsValidChanged(checkValidFields);
-          } else if (platform === "iOS") {
+          } else if (platform === "ios") {
             console.log("Изменение валидности в iOS, метод onFieldsValidChanged", checkValidFields);
             window.webkit.messageHandlers.onFieldsValidChanged.postMessage(checkValidFields);
           }
@@ -5421,13 +5424,13 @@
             };
             objectsArr[i] = fieldObj;
           }
-          if (platform === "Android") {
+          if (platform === "android") {
             console.log(
               "отправка всех данных в Android при изменении любого поля, метод onFieldsValueChange",
               JSON.stringify(objectsArr)
             );
             AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
-          } else if (platform === "iOS") {
+          } else if (platform === "ios") {
             console.log(
               "отправка всех данных в iOS при изменении любого поля, метод onFieldsValueChange",
               JSON.stringify(objectsArr)
@@ -5465,13 +5468,13 @@
           validationFields(i);
           fieldValidChanged();
         });
-        if (platform === "Android") {
+        if (platform === "android") {
           console.log(
             "отправка всех данных в Android при возврате на экран, метод onFieldsValueChange",
             JSON.stringify(objectsArr)
           );
           AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
-        } else if (platform === "iOS") {
+        } else if (platform === "ios") {
           console.log(
             "отправка всех данных в iOS при возврате на экран, метод onFieldsValueChange",
             JSON.stringify(objectsArr)
@@ -5548,10 +5551,10 @@
               name: "",
               phone: ""
             };
-            if (platform === "Android") {
+            if (platform === "android") {
               console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
               AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
-            } else if (platform === "iOS") {
+            } else if (platform === "ios") {
               console.log("отправка телефона в iOS, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
               window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(phone), MOBILE_PHONE);
             }
@@ -5563,10 +5566,10 @@
               name: "",
               phone: ""
             };
-            if (platform === "Android") {
+            if (platform === "android") {
               console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
               AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
-            } else if (platform === "iOS") {
+            } else if (platform === "ios") {
               console.log("отправка телефона в iOS, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
               window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(phone), MOBILE_PHONE);
             }
@@ -5598,10 +5601,10 @@
             selectedItem: String(listSelectedItemArr[i]),
             list: listOptionsArr[i]
           };
-          if (platform === "Android") {
+          if (platform === "android") {
             console.log("отправка списка в Android, метод onClick", JSON.stringify(list), LIST);
             AndroidInterface.onClick(JSON.stringify(list), LIST);
-          } else if (platform === "iOS") {
+          } else if (platform === "ios") {
             console.log("отправка списка в iOS, метод onClick", JSON.stringify(list), LIST);
             window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(list), LIST);
           }
