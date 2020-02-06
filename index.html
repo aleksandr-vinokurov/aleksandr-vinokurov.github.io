@@ -5204,6 +5204,41 @@
         }
       }
 
+      /* отправка данных в Android/iOS */
+      function sendData(platform, method, objectJSON, type) {
+        try {
+          switch (platform) {
+            case "android":
+              if (method === "onFieldsValidChanged") {
+                console.log("Изменение валидности в Android, метод onFieldsValidChanged", checkValidFields);
+                AndroidInterface.onFieldsValidChanged(objectJSON);
+              } else if (method === "onFieldsValueChange") {
+                console.log("отправка всех данных в Android, метод onFieldsValueChange", JSON.stringify(objectJSON));
+                AndroidInterface.onFieldsValueChange(JSON.stringify(objectJSON));
+              } else if (method === "onClick") {
+                console.log("отправка телефона в Android, метод onClick", JSON.stringify(objectJSON), type);
+                AndroidInterface.onClick(JSON.stringify(objectJSON), type);
+              }
+              break;
+
+            case "ios":
+              if (method === "onFieldsValidChanged") {
+                console.log("Изменение валидности в iOS, метод onFieldsValidChanged", checkValidFields);
+                window.webkit.messageHandlers.onFieldsValidChanged.postMessage(objectJSON);
+              } else if (method === "onFieldsValueChange") {
+                console.log("отправка всех данных в iOS, метод onFieldsValueChange", JSON.stringify(objectJSON));
+                window.webkit.messageHandlers.onFieldsValueChange.postMessage(JSON.stringify(objectJSON));
+              } else if (method === "onClick") {
+                console.log("отправка телефона в iOS, метод onClick", JSON.stringify(objectJSON), type);
+                window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(objectJSON), type);
+              }
+              break;
+          }
+        } catch (error) {
+          // console.log(error);
+        }
+      }
+
       /* Оповещение о изменения валидности поля в WebView */
       const allFields = document.querySelectorAll(".form-item-input");
       let checkValidFields = false; //Изменение состояния валидности
@@ -5213,17 +5248,7 @@
       function setFieldValidChanged(changedBooleanArr) {
         if (checkValidFields !== !changedBooleanArr.includes(false)) {
           checkValidFields = !changedBooleanArr.includes(false);
-          try {
-            if (platform === "android") {
-              console.log("Изменение валидности в Android, метод onFieldsValidChanged", checkValidFields);
-              AndroidInterface.onFieldsValidChanged(checkValidFields);
-            } else if (platform === "ios") {
-              console.log("Изменение валидности в iOS, метод onFieldsValidChanged", checkValidFields);
-              window.webkit.messageHandlers.onFieldsValidChanged.postMessage(checkValidFields);
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          sendData(platform, "onFieldsValidChanged", checkValidFields);
         }
       }
 
@@ -5428,23 +5453,7 @@
             };
             objectsArr[i] = fieldObj;
           }
-          try {
-            if (platform === "android") {
-              console.log(
-                "отправка всех данных в Android при изменении любого поля, метод onFieldsValueChange",
-                JSON.stringify(objectsArr)
-              );
-              AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
-            } else if (platform === "ios") {
-              console.log(
-                "отправка всех данных в iOS при изменении любого поля, метод onFieldsValueChange",
-                JSON.stringify(objectsArr)
-              );
-              window.webkit.messageHandlers.onFieldsValueChange.postMessage(JSON.stringify(objectsArr));
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          sendData(platform, "onFieldsValueChange", objectsArr);
         });
       });
 
@@ -5476,23 +5485,7 @@
           validationFields(i);
           fieldValidChanged();
         });
-        try {
-          if (platform === "android") {
-            console.log(
-              "отправка всех данных в Android при возврате на экран, метод onFieldsValueChange",
-              JSON.stringify(objectsArr)
-            );
-            AndroidInterface.onFieldsValueChange(JSON.stringify(objectsArr));
-          } else if (platform === "ios") {
-            console.log(
-              "отправка всех данных в iOS при возврате на экран, метод onFieldsValueChange",
-              JSON.stringify(objectsArr)
-            );
-            window.webkit.messageHandlers.onFieldsValueChange.postMessage(JSON.stringify(objectsArr));
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        sendData(platform, "onFieldsValueChange", objectsArr);
       }
 
       /* Принятие данных по типу из Android */
@@ -5563,17 +5556,7 @@
               name: "",
               phone: ""
             };
-            try {
-              if (platform === "android") {
-                console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
-                AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
-              } else if (platform === "ios") {
-                console.log("отправка телефона в iOS, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
-                window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(phone), MOBILE_PHONE);
-              }
-            } catch (error) {
-              console.log(error);
-            }
+            sendData(platform, "onClick", phone, MOBILE_PHONE);
           } else {
             const phone = {
               type: String(MOBILE_PHONE),
@@ -5582,17 +5565,7 @@
               name: "",
               phone: ""
             };
-            try {
-              if (platform === "android") {
-                console.log("отправка телефона в Android, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
-                AndroidInterface.onClick(JSON.stringify(phone), MOBILE_PHONE);
-              } else if (platform === "ios") {
-                console.log("отправка телефона в iOS, метод onClick", JSON.stringify(phone), MOBILE_PHONE);
-                window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(phone), MOBILE_PHONE);
-              }
-            } catch (error) {
-              console.log(error);
-            }
+            sendData(platform, "onClick", phone, MOBILE_PHONE);
           }
         });
       });
@@ -5621,17 +5594,7 @@
             selectedItem: String(listSelectedItemArr[i]),
             list: listOptionsArr[i]
           };
-          try {
-            if (platform === "android") {
-              console.log("отправка списка в Android, метод onClick", JSON.stringify(list), LIST);
-              AndroidInterface.onClick(JSON.stringify(list), LIST);
-            } else if (platform === "ios") {
-              console.log("отправка списка в iOS, метод onClick", JSON.stringify(list), LIST);
-              window.webkit.messageHandlers.onClick.postMessage(JSON.stringify(list), LIST);
-            }
-          } catch (error) {
-            console.log(error);
-          }
+          sendData(platform, "onClick", list, LIST);
         });
       });
 
