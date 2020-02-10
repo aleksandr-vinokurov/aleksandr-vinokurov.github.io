@@ -5588,7 +5588,6 @@
 
       listButtons.forEach(function(button, i) {
         button.addEventListener("click", function() {
-          this.blur(); //отменяет выпадение списка
           const LIST = 1; //код списка
           const list = {
             type: String(LIST),
@@ -5597,7 +5596,10 @@
             selectedItem: String(listSelectedItemArr[i]),
             list: listOptionsArr[i]
           };
-          sendData(platform, "onClick", list, LIST);
+          if (platform === "android") {
+            this.blur(); //отменяет выпадение списка
+            sendData(platform, "onClick", list, LIST);
+          }
         });
       });
 
