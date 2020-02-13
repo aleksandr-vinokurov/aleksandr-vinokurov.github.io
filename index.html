@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html theme="white" platform="iOS">
+<html theme="white" platform="ios">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -67,6 +67,7 @@
             placeholder="№"
             pattern="^\d{10}"
             required="true"
+            maxlength="255"
           />
         </div>
         <div class="form-item-error">Лицевой счет должен быть, чтобы быть</div>
@@ -123,6 +124,8 @@
             class="form-comment-input form-item-input"
             placeholder="Сообщение получателю"
             required="false"
+            maxlength="255"
+            pattern="^\d{10}"
           ></textarea>
         </div>
       </div>
@@ -5108,6 +5111,14 @@
       /* Регулярки */
       const telRegExp = /^(\+7)\s?[ ][\(](9)[0-9]{2}[\)][ ]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}$/;
 
+      /* Удаление поля из DOM при наличие hidden */
+      const elementDOM = document.querySelectorAll(".form-item");
+      elementDOM.forEach(function(element, i) {
+        if (element.hasAttribute("hidden")) {
+          element.remove();
+        }
+      });
+
       /* Маска для телефона */
       const phoneInputArr = document.querySelectorAll('[class="form-tel-input form-item-input"]');
 
@@ -5234,9 +5245,7 @@
               }
               break;
           }
-        } catch (error) {
-          // console.log(error);
-        }
+        } catch (error) {}
       }
 
       /* Оповещение о изменения валидности поля в WebView */
